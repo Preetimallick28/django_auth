@@ -1,5 +1,6 @@
 from django.shortcuts import render , redirect
 from django.contrib.auth.models import User
+# from django.contrib import messages
 # we are learning django session base authentication system
 # Create your views here.
 def login_view(request):
@@ -13,6 +14,9 @@ def register_view(request):
         username = request.POST['username']
         password = request.POST['password']
         print(firstname,lastname,email,username)
+        # if User.objects.filter(username=username).exists():
+        #     messages.error(request, 'Username already taken.')
+        #     return redirect('register')
         u=User.objects.create(
             first_name = firstname,
             last_name = lastname,
