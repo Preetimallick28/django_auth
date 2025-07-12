@@ -1,10 +1,25 @@
 from django.shortcuts import render , redirect
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate ,login , logout
+from django.contrib import login_required
 # from django.contrib import messages
 # we are learning django session base authentication system
 # Create your views here.
 def login_view(request):
-    return render(request,'login.html')
+    if request.method == 'POST':
+        username_data = request.POST['username']
+        password_data = request.POST['password']
+        # print(username_data,password_data)
+        u=authenticate(username=username_data , password = password_data) #return boolean value
+        print(u)
+        # if credential is matching it will return user_out(true) and if not matching return None
+        if u is not None:
+            login(request,u)
+            return redirect('home')
+        else:
+            return render(request,'login.html',{'wrong_':True})
+        
+    return render(request,'login.html') 
 
 def register_view(request):
     if request.method == 'POST':
@@ -14,9 +29,6 @@ def register_view(request):
         username = request.POST['username']
         password = request.POST['password']
         print(firstname,lastname,email,username)
-        # if User.objects.filter(username=username).exists():
-        #     messages.error(request, 'Username already taken.')
-        #     return redirect('register')
         u=User.objects.create(
             first_name = firstname,
             last_name = lastname,
@@ -30,3 +42,29 @@ def register_view(request):
     #IntegrityError - unique constraint failed:auth_username -  when same username is used
         
     return render(request,'register.html')
+
+def logout_(request):
+    logout(request)
+    return redirect('login')
+
+#for what purpose we are storing credential in session storage
+# to design navbar like profile
+#how to store?
+# first we have to import login
+# from django.contrib.auth import authenticate ,login
+
+def profile(request):
+    return render(request,'profile.html')
+
+def reset_pass(request):
+    user_record = User.objects.get(username=request.user)
+    print(user_record.password)
+    if request.method=='POST':
+        # old_pass = request.POST['old_pass']
+        new_pass = request.POST['new_pass']
+        # print(old_pass,new_pass)
+        user_record.set_password(new_pass)
+        user_record.save()
+        logout(request)
+        return redirect('login')
+    return render(request,'reset_pass.html')

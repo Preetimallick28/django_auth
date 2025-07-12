@@ -2,10 +2,12 @@ from django.shortcuts import render
 
 # Create your views here.
 def home(request):
-    return render('','home.html')
+    return render(request,'home.html')
 def about(request):
-    return render('about/','about.html')
+    return render(request,'about.html')
 def bookings(request):
-    return render('bookings/','bookings.html')
+    return render(request,'bookings.html')
 def history(request):
-    return render('history/','history.html')
+    return render(request,'history.html')
+
+# sorry sir
