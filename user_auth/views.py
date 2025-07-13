@@ -22,6 +22,7 @@ def login_view(request):
     return render(request,'login.html') 
 
 def register_view(request):
+    context = {}
     if request.method == 'POST':
         firstname = request.POST['firstname']
         lastname = request.POST['lastname']
@@ -29,6 +30,10 @@ def register_view(request):
         username = request.POST['username']
         password = request.POST['password']
         print(firstname,lastname,email,username)
+        if User.objects.filter(username=username).exists():
+            context['error'] = 'Username already exists.please choose another one'
+            return render(request,'register.html',context)
+
         u=User.objects.create(
             first_name = firstname,
             last_name = lastname,
@@ -57,14 +62,22 @@ def profile(request):
     return render(request,'profile.html')
 
 def reset_pass(request):
+    context={}
     user_record = User.objects.get(username=request.user)
     print(user_record.password)
     if request.method=='POST':
-        # old_pass = request.POST['old_pass']
+        old_pass = request.POST['old_pass']
         new_pass = request.POST['new_pass']
+        
+        u= authenticate(username=user_record.username , password=old_pass)
         # print(old_pass,new_pass)
-        user_record.set_password(new_pass)
-        user_record.save()
-        logout(request)
-        return redirect('login')
+        if u is not None:
+            user_record.set_password(new_pass)
+            user_record.save()
+            logout(request)
+            return redirect('login')
+        else:
+            context['error']='you have entered wrong old password'
+            return render(request,'reset_pass.html',context)
+        
     return render(request,'reset_pass.html')

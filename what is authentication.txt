@@ -1,0 +1,6 @@
+what is authentication?
+verifying the credential / identity of user 
+
+what is authorization
+giving access to the part of the application
+example - Netflix , without subscription they don't allow to watch movies

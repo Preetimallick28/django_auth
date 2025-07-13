@@ -19,12 +19,9 @@
 
         <button type="submit" class="btn-login">REGISTER</button>
     </form>
-    <!-- Show messages -->
-    <!-- {% if messages %}
-        {% for message in messages %}
-            <p style="color: red;">{{ message }}</p>
-        {% endfor %}
-    {% endif %} -->
+    {% if error %}
+        <h2 class="mt-5" style="color: red;">{{error}}</h2>
+    {% endif %}
     </div>
 </center>
 {% endblock content %}

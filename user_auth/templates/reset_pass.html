@@ -13,6 +13,9 @@
 
         <button type="submit" class="btn-login">Reset Password</button>
     </form>
+    {% if error %}
+    <h2>{{error}}</h2>
+    {% endif %}
 </div>
 </center>
 {% endblock content %}
